@@ -149,6 +149,17 @@ hyprctl reload
 
 <br>
 
+## Graphical Volume Control
+```bash
+sudo pacman -S pavucontrol
+```
+
+<br>
+
+---
+
+<br>
+
 ## Hyprland Config
 - This is a following example of how I config my hyprland
 - I changed the value of `gaps_in` and `gaps_out` to `0`
