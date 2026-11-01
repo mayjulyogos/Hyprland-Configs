@@ -712,6 +712,26 @@ hl.monitor({
 
 <br>
 
+## Screenshot Function
+- Install Dependencies
+```bash
+sudo pacman -S grim slurp wl-clipboard libnotify
+```
+- Paste these following lines into `Hyprland.lua` file under `---- KEYBINDINGS ----` section
+```bash
+-- Screenshot
+-- Super + Shift + S: Region capture to clipboard
+hl.bind("SUPER + SHIFT + S", hl.dsp.exec_cmd("sh -c 'grim -g \"$(slurp)\" - | wl-copy'"))
+-- Shift + Print: Full screen capture saved to ~/Pictures
+hl.bind("SUPER + SHIFT + S", hl.dsp.exec_cmd("sh -c 'grim ~/Pictures/$(date +%Y-%m-%d_%H-%M-%S).png'"))
+```
+
+<br>
+
+---
+
+<br>
+
 ## Resolve lid switch via native lua eval
 - Add these following lines in `hyprland.lua` under your `---- Monitor ----` section to switch on and off your laptop lid automatically
 ```bash
@@ -1121,6 +1141,11 @@ hl.bind("XF86AudioPrev",  hl.dsp.exec_cmd("playerctl previous"),   { locked = tr
 -- Hyprlock
 hl.bind(mainMod .. " + L", hl.dsp.exec_cmd("hyprlock"))
 
+-- Screenshot
+-- Super + Shift + S: Region capture to clipboard
+hl.bind("SUPER + SHIFT + S", hl.dsp.exec_cmd("sh -c 'grim -g \"$(slurp)\" - | wl-copy'"))
+-- Shift + Print: Full screen capture saved to ~/Pictures
+hl.bind("SUPER + SHIFT + S", hl.dsp.exec_cmd("sh -c 'grim ~/Pictures/$(date +%Y-%m-%d_%H-%M-%S).png'"))
 
 
 --------------------------------
