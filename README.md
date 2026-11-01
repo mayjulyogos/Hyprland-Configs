@@ -671,6 +671,47 @@ end)
 
 <br>
 
+## Display Configs
+- Changing the `resolution` and `refresh-rate`
+```bash
+------------------
+---- MONITORS ----
+------------------
+
+-- See https://wiki.hypr.land/configuring/core/monitors/
+-- hyprland.lua
+-- Native Hyprland Lua monitor and switch configurations
+
+-- 1. Default Monitor Layouts (Keep laptop screen enabled by default)
+hl.monitor({
+    output   = "eDP-1",
+    mode     = "1920x1080@180",
+    position = "auto",
+    scale    = "1",
+})
+
+hl.monitor({
+    output = "HDMI-A-1",
+    mode = "preferred",
+    position = "auto-right",
+    scale = "1"
+})
+
+hl.monitor({
+    output = "DP-1",
+    mode = "2560x1440@144",
+    position = "auto-right",
+    scale = "1",
+    transform = 2
+})
+```
+
+<br>
+
+---
+
+<br>
+
 ## Resolve lid switch via native lua eval
 - Add these following lines in `hyprland.lua` under your `---- Monitor ----` section to switch on and off your laptop lid automatically
 ```bash
@@ -745,7 +786,7 @@ sudo pacman -S bluez
 -- 1. Default Monitor Layouts (Keep laptop screen enabled by default)
 hl.monitor({
     output   = "eDP-1",
-    mode     = "preferred",
+    mode     = "1920x1080@180",
     position = "auto",
     scale    = "1",
 })
@@ -759,7 +800,7 @@ hl.monitor({
 
 hl.monitor({ 
     output = "DP-1", 
-    mode = "preferred", 
+    mode = "2560x1440@144", 
     position = "auto-right", 
     scale = "1", 
     transform = 2 
