@@ -7,8 +7,7 @@ sudo pacman -S hyprland
 
 ## Dependencies
 ```bash
-sudo pacman -S 
-	dunst \
+sudo pacman -S dunst \
     hyprpaper \
     hyprlauncher \
     hyprpolkitagent \
@@ -16,7 +15,8 @@ sudo pacman -S
     quickshell \
     ttf-font-awesome \
     ttf-jetbrains-mono-nerd \
-    nautilus
+    nautilus \
+    polkit-gnome
 
 fc-cache -fv
 ```
@@ -33,6 +33,7 @@ fc-cache -fv
 - Press `Win + M` to exit `Hyprland`
 - Press `Win + L` to perform `Lock Screen` ( Using Hyprlock with customized key-bindings )
 - Press `Crtl + Space` to switch `Language Input` ( Using Fctix 5 )
+- Press `Win + Shift + S` to toggle screenshot ( Using Grimp )
 
 <br>
 
@@ -89,9 +90,7 @@ sudo nano /home/arch/.config/hypr/hyprland.lua
 -- Or execute your favorite apps at launch like this:
 --
 -- hl.on("hyprland.start", function ()
---   hl.exec_cmd(terminal)
 --   hl.exec_cmd("nm-applet")
---   hl.exec_cmd("waybar")
 --   hl.exec_cmd("hyprpaper")
 -- end)
 ```
@@ -107,9 +106,7 @@ sudo nano /home/arch/.config/hypr/hyprland.lua
 -- Or execute your favorite apps at launch like this:
 --
 hl.on("hyprland.start", function ()
-   hl.exec_cmd(terminal)
    hl.exec_cmd("nm-applet")
-   hl.exec_cmd("waybar")
    hl.exec_cmd("hyprpaper")
 end)
 ```
@@ -117,7 +114,7 @@ end)
 
 <br>
 
-### FIx the File Ownership
+### Fix the File Ownership
 - Run this command to make sure your regular user account owns your configuration file
 ```bash
 sudo chown arch:arch ~/.config/hypr/hyprland.lua
@@ -152,6 +149,22 @@ hyprctl reload
 ## Graphical Volume Control
 ```bash
 sudo pacman -S pavucontrol
+```
+
+<br>
+
+---
+
+<br>
+
+# Battery Info
+- Ensure `upower` Daemon is Running
+```bash
+# Check UPower Status
+systemctl status upower.service
+
+# Enable and Start UPower
+sudo systemctl enable --now upower.service
 ```
 
 <br>
@@ -218,6 +231,7 @@ local menu = "hyprlauncher"
 hl.on("hyprland.start", function () 
    hl.exec_cmd("nm-applet")
    hl.exec_cmd("hyprpaper")
+   hl.exec_cmd("/usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1")
 end)
 
 
@@ -408,10 +422,10 @@ hl.config({
 
         follow_mouse = 1,
 
-        sensitivity = 0, -- -1.0 - 1.0, 0 means no modification.
+        sensitivity = 0.5, -- -1.0 - 1.0, 0 means no modification.
 
         touchpad = {
-            natural_scroll = false,
+            natural_scroll = true,
         },
     },
 })
@@ -625,12 +639,14 @@ hl.bind(mainMod .. " + L", hl.dsp.exec_cmd("hyprlock"))
 
 <br>
 
-## Fctix
+## Fctix 5
 - For Chinese Input
 ```bash
 sudo pacman -S fcitx5 fcitx5-configtool fcitx5-chinese-addons fcitx5-gtk fcitx5-qt
 ```
 - Add environment variables to `hyprland.lua`
+- Fcitx5 prefers using `Wayland's native input method protocol` instead of forcing applications through these `older input modules`. Having them set can occasionally cause `input glitches` or `warning popups`.
+- So it is recommended to commend out these following environments variable
 ```bash
 -------------------------------
 ---- ENVIRONMENT VARIABLES ----
@@ -640,12 +656,12 @@ hl.env("XCURSOR_SIZE", "24")
 hl.env("HYPRCURSOR_SIZE", "24")
 
 -- Fcitx5 Framework Input Rules
-hl.env("IMMODULE", "fcitx")
-hl.env("XMODIFIERS", "@im=fcitx")
-hl.env("GTK_IM_MODULE", "fcitx")
-hl.env("QT_IM_MODULE", "fcitx")
-hl.env("SDL_IM_MODULE", "fcitx")
-hl.env("GLFW_IM_MODULE", "ibus") -- Fallback for specific GLFW windows
+-- hl.env("IMMODULE", "fcitx")
+-- hl.env("XMODIFIERS", "@im=fcitx")
+-- hl.env("GTK_IM_MODULE", "fcitx")
+-- hl.env("QT_IM_MODULE", "fcitx")
+-- hl.env("SDL_IM_MODULE", "fcitx")
+-- hl.env("GLFW_IM_MODULE", "ibus") -- Fallback for specific GLFW windows
 ```
 - Add Autostart Fctix5 Deamon
 ```bash
@@ -661,6 +677,7 @@ hl.env("GLFW_IM_MODULE", "ibus") -- Fallback for specific GLFW windows
 hl.on("hyprland.start", function () 
    hl.exec_cmd("nm-applet")
    hl.exec_cmd("hyprpaper")
+   hl.exec_cmd("/usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1")
    hl.exec_cmd("fcitx5 -d")
 end)
 ```
@@ -869,6 +886,7 @@ local menu = "hyprlauncher"
 hl.on("hyprland.start", function () 
    hl.exec_cmd("nm-applet")
    hl.exec_cmd("hyprpaper")
+   hl.exec_cmd("/usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1")
    hl.exec_cmd("fcitx5 -d")
 end)
 
@@ -883,12 +901,12 @@ hl.env("XCURSOR_SIZE", "24")
 hl.env("HYPRCURSOR_SIZE", "24")
 
 -- Fcitx5 Framework Input Rules
-hl.env("IMMODULE", "fcitx")
-hl.env("XMODIFIERS", "@im=fcitx")
-hl.env("GTK_IM_MODULE", "fcitx")
-hl.env("QT_IM_MODULE", "fcitx")
-hl.env("SDL_IM_MODULE", "fcitx")
-hl.env("GLFW_IM_MODULE", "ibus") -- Fallback for specific GLFW windows
+-- hl.env("IMMODULE", "fcitx")
+-- hl.env("XMODIFIERS", "@im=fcitx")
+-- hl.env("GTK_IM_MODULE", "fcitx")
+-- hl.env("QT_IM_MODULE", "fcitx")
+-- hl.env("SDL_IM_MODULE", "fcitx")
+-- hl.env("GLFW_IM_MODULE", "ibus") -- Fallback for specific GLFW windows
 
 
 
@@ -1070,10 +1088,10 @@ hl.config({
 
         follow_mouse = 1,
 
-        sensitivity = 0, -- -1.0 - 1.0, 0 means no modification.
+        sensitivity = 0.5, -- -1.0 - 1.0, 0 means no modification.
 
         touchpad = {
-            natural_scroll = false,
+            natural_scroll = true,
         },
     },
 })
