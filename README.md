@@ -1,4 +1,5 @@
 # Hyprland-Configs
+This is all about Hyprland configs and some fixes for daily usage based on my experience.
 
 ## Installation
 ```bash
