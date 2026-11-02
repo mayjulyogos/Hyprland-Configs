@@ -7,7 +7,8 @@ sudo pacman -S hyprland
 
 ## Dependencies
 ```bash
-sudo pacman -S dunst \
+sudo pacman -S kitty \
+    dunst \
     hyprpaper \
     hyprlauncher \
     hyprpolkitagent \
@@ -794,6 +795,33 @@ sudo systemctl enable --now bluetooth
 sudo systemctl start bluetooth
 
 sudo pacman -S bluez
+```
+
+<br>
+
+---
+
+<br>
+
+## Kitty Configs
+- `Font size`, `Font Family`, `Scroll back Limits`, `Background Opacity` and `Background Color`
+```bash
+font_size 14
+
+font_family      JetBrainsMono Nerd Font
+bold_font        auto
+italic_font      auto
+bold_italic_font auto
+
+scrollback_lines 16384000
+
+window_padding_width 10
+
+confirm_os_window_close 0
+
+background_opacity 0.5
+
+background #000000
 ```
 
 <br>
