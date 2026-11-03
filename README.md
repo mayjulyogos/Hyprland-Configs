@@ -182,11 +182,11 @@ hyprpm reload
 - Maintenance & Troubleshooting
 	Use these utility commands to handle updates or fix broken plugin builds.
 
-| **Command**          | **Purpose**                                                                      |
-| -------------------- | -------------------------------------------------------------------------------- |
-| `hyprpm update`      | Pulls latest plugin code and rebuilds headers against Hyprland.                  |
-| `hyprpm reload`      | Unloads and reloads all enabled plugins live.                                    |
-| `hyprpm purge-cache` | Cleans cached build artifacts, compiled shared objects (`.so`), and old headers. |
+| **Command**          | **Purpose**                                                                                                                                                                   |
+| -------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `hyprpm update`      | Pulls latest plugin code and rebuilds headers against Hyprland.                                                                                                               |
+| `hyprpm reload`      | Unloads and reloads all enabled plugins live.                                                                                                                                 |
+| `hyprpm purge-cache` | Cleans cached build artifacts, compiled shared objects (`.so`), and old headers. Which will fully reset your `Hyprpm` by disabling every single `plugins` you have installed. |
 
 <br>
 
