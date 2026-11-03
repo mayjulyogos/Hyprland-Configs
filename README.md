@@ -638,7 +638,7 @@ hl.on("hyprland.start", function ()
    hl.exec_cmd("hyprpaper")
    hl.exec_cmd("/usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1")
    hl.exec_cmd("fcitx5 -d")
-   hl.exec_cmd("flatpak run com.github.wwmm.easyeffects --gapplication-service")
+   hl.exec_cmd("hyprpm reload")
 end)
 
 
