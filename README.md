@@ -16,6 +16,9 @@ sudo pacman -S kitty \
     quickshell \
     ttf-font-awesome \
     ttf-jetbrains-mono-nerd \
+    noto-fonts \
+    noto-fonts-cjk \
+    noto-fonts-emoji \
     nautilus \
     polkit-gnome
 
@@ -32,9 +35,12 @@ fc-cache -fv
 - Press `Win + R` to open `Terminal`
 - Press `Win + C` to terminate an `Application`
 - Press `Win + M` to exit `Hyprland`
-- Press `Win + L` to perform `Lock Screen` ( Using Hyprlock with customized key-bindings )
-- Press `Crtl + Space` to switch `Language Input` ( Using Fctix 5 )
-- Press `Win + Shift + S` to toggle screenshot ( Using Grimp )
+- Press `Win + L` to perform `Lock Screen` ( Using `Hyprlock` with customized `key-bindings` )
+- Press `Crtl + Space` to switch `Language Input` ( Using `Fctix 5` )
+- Press `Win + Shift + S` to toggle screenshot ( Using `Grim` )
+- Press `Win + Ctrl + S` to toggle `Hyprcapture` editor
+- Press `Win + Shift + W` to toggle `Hyprcapture` recorder to record your `Window`
+- Press `Win + Shift + F` to toggle `Hyprcapture` recorder to record your `Full Screen`
 
 <br>
 
@@ -135,6 +141,13 @@ confirm_os_window_close 0
 background_opacity 0.5
 
 background #000000
+
+
+
+# Map CJK Unified Ideographs to your preferred Chinese font
+symbol_map U+4E00-U+9FFF PingFang SC Bold
+symbol_map U+3400-U+4DBF PingFang SC Bold
+symbol_map U+20000-U+2A6DF PingFang SC Bold
 ```
 
 <br>
@@ -367,7 +380,8 @@ hl.monitor({
 
 <br>
 
-## Screenshot Function
+## Screenshot function
+### Grim
 - Install Dependencies
 ```bash
 sudo pacman -S grim slurp wl-clipboard libnotify
@@ -379,6 +393,44 @@ sudo pacman -S grim slurp wl-clipboard libnotify
 hl.bind("SUPER + SHIFT + S", hl.dsp.exec_cmd("sh -c 'grim -g \"$(slurp)\" - | wl-copy'"))
 -- Shift + Print: Full screen capture saved to ~/Pictures
 hl.bind("SUPER + SHIFT + S", hl.dsp.exec_cmd("sh -c 'grim ~/Pictures/$(date +%Y-%m-%d_%H-%M-%S).png'"))
+```
+
+<br>
+
+### Hyprcapture
+- Install `Hyprpm`
+```bash
+sudo pacman -S hyprpm
+```
+- Install Dependencies
+```bash
+sudo pacman -Syu --needed base-devel cmake git cpio \
+    hyprland nlohmann-json lua glib2 \
+    qt6-base qt6-svg qt6-wayland layer-shell-qt opencv vtk hdf5 \
+    pipewire libpipewire fftw libpulse ffmpeg wl-clipboard \
+    pipewire-pulse wireplumber
+```
+- Build and enable the plugin
+```bash
+hyprpm update
+hyprpm add https://github.com/gfhdhytghd/HyprCapture
+hyprpm enable hyprcapture
+hyprpm reload
+```
+- Paste these following lines into `Hyprland.lua` file under `---- KEYBINDINGS ----` section
+- `Lua Actions` and `Key-Bindings`
+```bash
+-- Screenshot
+hl.bind("SUPER + SHIFT + s", hl.plugin.hyprcapture.open)
+hl.bind("SUPER + CTRL + s", hl.plugin.hyprcapture.open_editor)
+
+hl.bind("SUPER + SHIFT + w", function()
+    hl.plugin.hyprcapture.open("window")
+end)
+
+hl.bind("SUPER + SHIFT + f", function()
+    hl.plugin.hyprcapture.open("fullscreen")
+end)
 ```
 
 <br>
@@ -481,7 +533,7 @@ hl.monitor({
     mode = "2560x1440@144", 
     position = "auto-right", 
     scale = "1", 
-    transform = 2 
+    transform = 2
 })
 
 -- 2. Lid Switch Handling (Dynamic Laptop Screen Control)
@@ -518,6 +570,7 @@ hl.on("hyprland.start", function ()
    hl.exec_cmd("hyprpaper")
    hl.exec_cmd("/usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1")
    hl.exec_cmd("fcitx5 -d")
+   hl.exec_cmd("flatpak run com.github.wwmm.easyeffects --gapplication-service")
 end)
 
 
@@ -609,20 +662,20 @@ hl.config({
     },
 
     animations = {
-        enabled = false,
+        enabled = True,
     },
     
     misc = {
-        -- Sets the global default font used by Hyprland to render text (like splash/notifications)
-        font_family = "JetBrainsMono Nerd Font",
-        
-        -- Optional: specific font used strictly for the background splash text
+        -- Combines your Nerd Font for English/symbols with a Chinese fallback font
+        font_family = "JetBrainsMono Nerd Font, Noto Sans CJK SC",
+
+        -- Optional: background splash text font
         splash_font_family = "JetBrainsMono Nerd Font",
     },
-    
+
     group = {
         groupbar = {
-            -- If you want your tab/group titles to follow the same font (falls back to misc.font_family if empty)
+            -- Tab and group titles font
             font_family = "JetBrainsMono Nerd Font",
             font_size = 12,
         }
@@ -630,8 +683,8 @@ hl.config({
 })
 
 -- Font Configs for System-Wide (GTK / Application Apps)
-hl.exec_cmd("gsettings set org.gnome.desktop.interface font-name 'JetBrainsMono Nerd Font 12'")
-hl.exec_cmd("gsettings set org.gnome.desktop.interface monospace-font-name 'JetBrainsMono Nerd Font 12'")
+hl.exec_cmd("gsettings set org.gnome.desktop.interface font-name 'PingFang SC Bold 12'")
+hl.exec_cmd("gsettings set org.gnome.desktop.interface monospace-font-name 'JetBrainsMono Nerd Font, PingFang SC Bold 12'")
 
 -- Default curves and animations, see https://wiki.hypr.land/configuring/core/animations/
 hl.curve("easeOutQuint",   { type = "bezier", points = { {0.23, 1},    {0.32, 1}    } })
@@ -821,10 +874,23 @@ hl.bind("XF86AudioPrev",  hl.dsp.exec_cmd("playerctl previous"),   { locked = tr
 hl.bind(mainMod .. " + L", hl.dsp.exec_cmd("hyprlock"))
 
 -- Screenshot
+-- Grim
 -- Super + Shift + S: Region capture to clipboard
 hl.bind("SUPER + SHIFT + S", hl.dsp.exec_cmd("sh -c 'grim -g \"$(slurp)\" - | wl-copy'"))
--- Shift + Print: Full screen capture saved to ~/Pictures/Screenshots
-hl.bind("SUPER + SHIFT + S", hl.dsp.exec_cmd("sh -c 'grim ~/Pictures/Screenshots/$(date +%Y-%m-%d_%H-%M-%S).png'"))
+-- Shift + Print: Full screen capture saved to ~/Pictures
+hl.bind("SUPER + SHIFT + S", hl.dsp.exec_cmd("sh -c 'grim ~/Pictures/$(date +%Y-%m-%d_%H-%M-%S).png'"))
+
+-- Hyprcapture
+-- hl.bind("SUPER + SHIFT + S", hl.plugin.hyprcapture.open)
+hl.bind("SUPER + CTRL + S", hl.plugin.hyprcapture.open_editor)
+
+hl.bind("SUPER + SHIFT + W", function()
+    hl.plugin.hyprcapture.open("window")
+end)
+
+hl.bind("SUPER + SHIFT + F", function()
+    hl.plugin.hyprcapture.open("fullscreen")
+end)
 
 
 
