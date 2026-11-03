@@ -177,7 +177,7 @@ hyprpm disable <plugin-name>
 hyprpm remove <plugin-name-or-repo-url>
 
 # Reload to unload binary components from memory
-hyprpm reloda
+hyprpm reload
 ```
 - Maintenance & Troubleshooting
 	Use these utility commands to handle updates or fix broken plugin builds.
