@@ -122,6 +122,78 @@ systemctl reboot
 
 <br>
 
+## Hyprpm (Hyprland Plugins)
+- Install `Hyprpm`
+```bash
+sudo pacman -S hyprpm
+```
+- Add `hyprpm reload` to `hyprland.lua`
+```bash
+-------------------
+---- AUTOSTART ----
+-------------------
+
+-- See https://wiki.hypr.land/configuring/core/autostart/
+
+-- Autostart necessary processes (like notifications daemons, status bars, etc.)
+-- Or execute your favorite apps at launch like this:
+--
+hl.on("hyprland.start", function () 
+   hl.exec_cmd("nm-applet")
+   hl.exec_cmd("hyprpaper")
+   hl.exec_cmd("/usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1")
+   hl.exec_cmd("fcitx5 -d")
+   hl.exec_cmd("hyprpm reload")
+end)
+```
+
+<br>
+
+### Important Command lines format
+- Initial Setup & Initialization
+```bash
+# Update/Sync Headers:
+hyprpm update
+```
+- Searching & Listing Plugins
+```bash
+# List all installed plugins and their statuses:
+hyprpm list
+```
+- Installing & Enabling Plugins
+	Installing a plugin requires adding its repository first, then enabling the desired plugin inside it.
+```bash
+# Add a plugin repository:
+# Enable a specific plugin:
+# Reload hyprpm into your running session:
+# Verification: The plugin's features or keybinds should immediately take effect in your Hyprland session.
+```
+- Disabling & Uninstalling Plugins
+```bash
+# Disable an active plugin
+hyprpm disable <plugin-name>
+
+# Remove the plugin repository
+hyprpm remove <plugin-name-or-repo-url>
+
+# Reload to unload binary components from memory
+hyprpm reloda
+```
+- Maintenance & Troubleshooting
+	Use these utility commands to handle updates or fix broken plugin builds.
+
+| **Command**          | **Purpose**                                                                      |
+| -------------------- | -------------------------------------------------------------------------------- |
+| `hyprpm update`      | Pulls latest plugin code and rebuilds headers against Hyprland.                  |
+| `hyprpm reload`      | Unloads and reloads all enabled plugins live.                                    |
+| `hyprpm purge-cache` | Cleans cached build artifacts, compiled shared objects (`.so`), and old headers. |
+
+<br>
+
+---
+
+<br>
+
 ## Kitty Configs
 - `Font size`, `Font Family`, `Scroll back Limits`, `Background Opacity` and `Background Color`
 ```bash
@@ -398,10 +470,6 @@ hl.bind("SUPER + SHIFT + S", hl.dsp.exec_cmd("sh -c 'grim ~/Pictures/$(date +%Y-
 <br>
 
 ### Hyprcapture
-- Install `Hyprpm`
-```bash
-sudo pacman -S hyprpm
-```
 - Install Dependencies
 ```bash
 sudo pacman -Syu --needed base-devel cmake git cpio \
