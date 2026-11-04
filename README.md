@@ -377,7 +377,7 @@ hl.bind(mainMod .. " + Escape", hl.dsp.exec_cmd("systemctl suspend && hyprlock")
 yay -S walker-bin elephant-bin
 yay -S elephant-providerlist-bin elephant-desktopapplicaations-bin
 ```
-- Add `elephant` to your `Autostart` section in `Hyprland.lua`
+- Add `walker` and `elephant` to your `Autostart` section in `Hyprland.lua`
 ```bash
 -------------------
 ---- AUTOSTART ----
@@ -393,6 +393,7 @@ hl.on("hyprland.start", function ()
    hl.exec_cmd("hyprpaper")
    hl.exec_cmd("/usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1")
    hl.exec_cmd("hyprpm reload")
+   hl.exec_cmd("walker")
    hl.exec_cmd("elephant")
 end)
 ```
@@ -857,6 +858,7 @@ hl.on("hyprland.start", function ()
    hl.exec_cmd("/usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1")
    hl.exec_cmd("hyprpaper")
    hl.exec_cmd("hyprpm reload")
+   hl.exec_cmd("walker")
    hl.exec_cmd("elephant")
    hl.exec_cmd("fcitx5 -d")
 end)
