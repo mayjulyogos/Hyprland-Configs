@@ -8,12 +8,8 @@ sudo pacman -S hyprland
 ## Dependencies
 ```bash
 sudo pacman -S kitty \
-    dunst \
-    hyprpaper \
-    hyprlauncher \
     hyprpolkitagent \
     xdg-desktop-portal-hyprland \
-    quickshell \
     ttf-font-awesome \
     ttf-jetbrains-mono-nerd \
     noto-fonts \
@@ -41,6 +37,7 @@ fc-cache -fv
 - Press `Win + Ctrl + S` to toggle `Hyprcapture` editor
 - Press `Win + Shift + W` to toggle `Hyprcapture` recorder to record your `Window`
 - Press `Win + Shift + F` to toggle `Hyprcapture` recorder to record your `Full Screen`
+- Press `Win + Escape` to put your computer into `suspend` mode with your current account `locked`
 
 <br>
 
@@ -50,6 +47,9 @@ fc-cache -fv
 
 ## Wallpaper
 - Hyprpaper
+```bash
+sudo pacman -S hyprpaper
+```
 ### Configure hyprpaper config file
 ```bash
 sudo nano /home/arch/.config/hypr/hyprpaper.conf
@@ -99,6 +99,7 @@ sudo nano /home/arch/.config/hypr/hyprland.lua
 --
 hl.on("hyprland.start", function ()
    hl.exec_cmd("nm-applet")
+   hl.exec_cmd("/usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1")
    hl.exec_cmd("hyprpaper")
 end)
 ```
@@ -140,15 +141,11 @@ sudo pacman -S hyprpm
 --
 hl.on("hyprland.start", function () 
    hl.exec_cmd("nm-applet")
-   hl.exec_cmd("hyprpaper")
    hl.exec_cmd("/usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1")
-   hl.exec_cmd("fcitx5 -d")
+   hl.exec_cmd("hyprpaper")
    hl.exec_cmd("hyprpm reload")
 end)
 ```
-
-<br>
-
 ### Important Command lines format
 - Initial Setup & Initialization
 ```bash
@@ -272,6 +269,10 @@ sudo systemctl enable --now upower.service
 <br>
 
 ## Hyprlock
+- Installation
+```bash
+sudo pacman -S hyprlock
+```
 - Create `Hyprlock` config file
 ```bash
 nano ~/.config/hypr/hyprlock.conf
@@ -351,6 +352,82 @@ hl.bind(mainMod .. " + L", hl.dsp.exec_cmd("hyprlock"))
 
 <br>
 
+## Suspend Function
+- Add `keybindings-config` into `hyprland.lua`
+```bash
+---------------------
+---- KEYBINDINGS ----
+---------------------
+
+...
+
+-- Suspend/Sleep the laptop
+hl.bind(mainMod .. " + Escape", hl.dsp.exec_cmd("systemctl suspend && hyprlock"))
+```
+
+<br>
+
+---
+
+<br>
+
+## Walker (App Launcher)
+- Install dependencies
+```bash
+yay -S walker-bin elephant-bin
+yay -S elephant-providerlist-bin elephant-desktopapplicaations-bin
+```
+- Add `elephant` to your `Autostart` section in `Hyprland.lua`
+```bash
+-------------------
+---- AUTOSTART ----
+-------------------
+
+-- See https://wiki.hypr.land/configuring/core/autostart/
+
+-- Autostart necessary processes (like notifications daemons, status bars, etc.)
+-- Or execute your favorite apps at launch like this:
+--
+hl.on("hyprland.start", function () 
+   hl.exec_cmd("nm-applet")
+   hl.exec_cmd("hyprpaper")
+   hl.exec_cmd("/usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1")
+   hl.exec_cmd("hyprpm reload")
+   hl.exec_cmd("elephant")
+end)
+```
+- Configs your `Kye-Bindings` change your default launcher from `Hyprlauncher` to `Walker`
+- Comment out your default `Hyprlauncher` key-bindings and config the key-binding to  launch `Walker`
+```bash
+---------------------
+---- KEYBINDINGS ----
+---------------------
+
+local mainMod = "SUPER" -- Sets "Windows" key as main modifier
+
+-- Example binds, see https://wiki.hypr.land/configuring/core/binds/ for more
+hl.bind(mainMod .. " + Q", hl.dsp.exec_cmd(terminal))
+local closeWindowBind = hl.bind(mainMod .. " + C", hl.dsp.window.close())
+-- closeWindowBind:set_enabled(false)
+hl.bind(mainMod .. " + M", hl.dsp.exec_cmd("command -v hyprshutdown >/dev/null 2>&1 && hyprshutdown || hyprctl dispatch 'hl.dsp.exit()'"))
+hl.bind(mainMod .. " + E", hl.dsp.exec_cmd(fileManager))
+hl.bind(mainMod .. " + V", hl.dsp.window.float({ action = "toggle" }))
+-- hl.bind(mainMod .. " + R", hl.dsp.exec_cmd(menu))
+hl.bind(mainMod .. " + P", hl.dsp.window.pseudo())
+hl.bind(mainMod .. " + J", hl.dsp.layout("togglesplit"))    -- dwindle only
+
+...
+
+-- Walker
+hl.bind(mainMod .. " + R", hl.dsp.exec_cmd("walker"))
+```
+
+<br>
+
+---
+
+<br>
+
 ## Fctix 5
 - For Chinese Input
 ```bash
@@ -388,8 +465,10 @@ hl.env("HYPRCURSOR_SIZE", "24")
 --
 hl.on("hyprland.start", function () 
    hl.exec_cmd("nm-applet")
-   hl.exec_cmd("hyprpaper")
    hl.exec_cmd("/usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1")
+   hl.exec_cmd("hyprpaper")
+   hl.exec_cmd("hyprpm reload")
+   hl.exec_cmd("elephant")
    hl.exec_cmd("fcitx5 -d")
 end)
 ```
@@ -549,11 +628,151 @@ sudo pacman -S bluez
 
 <br>
 
+## Quickshell (Optional)
+- Installation
+```bash
+sudo pacman -S quickshell
+# or
+yay -S quickshell
+```
+- Add `quickshell` to your `---- AUTOSTART ----` section in `hyprland.lua`
+```bash
+-------------------
+---- AUTOSTART ----
+-------------------
+
+-- See https://wiki.hypr.land/configuring/core/autostart/
+
+-- Autostart necessary processes (like notifications daemons, status bars, etc.)
+-- Or execute your favorite apps at launch like this:
+--
+hl.on("hyprland.start", function () 
+   hl.exec_cmd("nm-applet")
+   hl.exec_cmd("/usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1")
+   hl.exec_cmd("hyprpaper")
+   hl.exec_cmd("hyprpm reload")
+   hl.exec_cmd("elephant")
+   hl.exec_cmd("fcitx5 -d")
+   hl.exec_cmd("quickshell")
+end)
+```
+- Create the `quickshell` folder and `shell.qml`
+- This is an example `quickshell` configs which just include a simple `clock` function
+```bash
+cd /home/arch/.config
+
+mkdir quickshell
+cd quickshell
+
+nano shell.qml
+```
+- `Quickshell` Configs
+```bash
+import Quickshell
+import Quickshell.Io
+import QtQuick
+
+PanelWindow {
+  id: root
+
+  anchors.top: true
+  anchors.left: true
+  anchors.right: true
+
+  implicitHeight: 45
+  color: "transparent"
+
+  // Dynamically change the exclusive zone: 
+  // Reserves 45px when shown, but drops to 0px when hidden to remove the gap.
+  exclusiveZone: root.shouldShow ? 45 : 0
+
+  // Invisible trigger zone spanning the top edge of the screen
+  MouseArea {
+    id: edgeTrigger
+    anchors.fill: parent
+    hoverEnabled: true
+    acceptedButtons: Qt.NoButton
+  }
+
+  // Show if either the top edge or the pill itself is hovered
+  readonly property bool shouldShow: edgeTrigger.containsMouse || pill.hovered
+
+  Rectangle {
+    id: pill
+    property bool hovered: mouse.containsMouse
+
+    anchors.horizontalCenter: parent.horizontalCenter
+    
+    // Slide up out of bounds when hidden (-40), slide down when shown (5)
+    y: root.shouldShow ? 5 : -40
+
+    width: hovered ? 180 : 150
+    height: 30
+    radius: height / 2
+    color: hovered ? "#6f9bf3" : "#1b1b1b"
+
+    Behavior on y {
+      NumberAnimation { duration: 250; easing.type: Easing.OutBack }
+    }
+
+    Behavior on width {
+      NumberAnimation { duration: 250; easing.type: Easing.OutBack }
+    }
+
+    Behavior on color {
+      ColorAnimation { duration: 250; easing.type: Easing.OutBack }
+    }
+
+    Text {
+      id: clock
+      anchors.centerIn: parent
+      color: mouse.containsMouse ? "#000000" : "#ffffff"
+      font.weight: 700
+      font.pixelSize: 14
+
+      Behavior on color {
+        ColorAnimation { duration: 250; easing.type: Easing.OutBack }
+      }
+    }
+
+    MouseArea {
+      id: mouse
+      anchors.fill: parent
+      hoverEnabled: true
+    }
+
+    Process {
+      id: dateProc
+      command: ["date", "+%I:%M %p"]
+      running: true
+
+      stdout: StdioCollector {
+        onStreamFinished: clock.text = this.text.trim()
+      }
+    }
+
+    Timer {
+      interval: 1000
+      running: true
+      repeat: true
+      onTriggered: dateProc.running = true
+    }
+  }
+}
+```
+
+<br>
+
+---
+
+<br>
+
 ## Final Hyprland Config
 - **Gaps:** Set `gaps_in` and `gaps_out` to `0` for a seamless, gapless layout.
 - **Mouse Sensitivity:** Adjusted sensitivity to `0.5` for smoother cursor control.    
 - **Autostart:** Un-commented the autostart commands to launch applications automatically on boot.
 - **Font Configuration:** Added font settings (feel free to customize the font family and size to your preference).
+- For me I didn't like the concept of any type of `taskbar` just like `quickshell`. Therefor, I will not be using `quickshell` as my top bar. The `quickshell-workflow` which previously showed is just a `reference` for those who will going to use `Quickshell`
 ```bash
 -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
 -- AUTOGENERATED HYPRLAND CONFIG.                        --
@@ -635,10 +854,11 @@ local menu = "hyprlauncher"
 --
 hl.on("hyprland.start", function () 
    hl.exec_cmd("nm-applet")
-   hl.exec_cmd("hyprpaper")
    hl.exec_cmd("/usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1")
-   hl.exec_cmd("fcitx5 -d")
+   hl.exec_cmd("hyprpaper")
    hl.exec_cmd("hyprpm reload")
+   hl.exec_cmd("elephant")
+   hl.exec_cmd("fcitx5 -d")
 end)
 
 
@@ -894,7 +1114,6 @@ local closeWindowBind = hl.bind(mainMod .. " + C", hl.dsp.window.close())
 hl.bind(mainMod .. " + M", hl.dsp.exec_cmd("command -v hyprshutdown >/dev/null 2>&1 && hyprshutdown || hyprctl dispatch 'hl.dsp.exit()'"))
 hl.bind(mainMod .. " + E", hl.dsp.exec_cmd(fileManager))
 hl.bind(mainMod .. " + V", hl.dsp.window.float({ action = "toggle" }))
-hl.bind(mainMod .. " + R", hl.dsp.exec_cmd(menu))
 hl.bind(mainMod .. " + P", hl.dsp.window.pseudo())
 hl.bind(mainMod .. " + J", hl.dsp.layout("togglesplit"))    -- dwindle only
 
@@ -959,6 +1178,12 @@ end)
 hl.bind("SUPER + SHIFT + F", function()
     hl.plugin.hyprcapture.open("fullscreen")
 end)
+
+-- Walker
+hl.bind(mainMod .. " + R", hl.dsp.exec_cmd("walker"))
+
+-- Suspend/Sleep the laptop
+hl.bind(mainMod .. " + Escape", hl.dsp.exec_cmd("systemctl suspend && hyprlock"))
 
 
 
