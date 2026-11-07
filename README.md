@@ -16,7 +16,8 @@ sudo pacman -S kitty \
     noto-fonts-cjk \
     noto-fonts-emoji \
     nautilus \
-    polkit-gnome
+    polkit-gnome \
+    gnome-logs
 
 fc-cache -fv
 ```
@@ -37,7 +38,6 @@ fc-cache -fv
 - Press `Win + Ctrl + S` to toggle `Hyprcapture` editor
 - Press `Win + Shift + W` to toggle `Hyprcapture` recorder to record your `Window`
 - Press `Win + Shift + F` to toggle `Hyprcapture` recorder to record your `Full Screen`
-- Press `Win + Escape` to put your computer into `suspend` mode with your current account `locked`
 
 <br>
 
@@ -377,7 +377,7 @@ hl.bind(mainMod .. " + Escape", hl.dsp.exec_cmd("systemctl suspend && hyprlock")
 yay -S walker-bin elephant-bin
 yay -S elephant-providerlist-bin elephant-desktopapplicaations-bin
 ```
-- Add `walker` and `elephant` to your `Autostart` section in `Hyprland.lua`
+- Add `elephant` to your `Autostart` section in `Hyprland.lua`
 ```bash
 -------------------
 ---- AUTOSTART ----
@@ -861,6 +861,7 @@ hl.on("hyprland.start", function ()
    hl.exec_cmd("walker")
    hl.exec_cmd("elephant")
    hl.exec_cmd("fcitx5 -d")
+   hl.exec_cmd("flatpak run com.github.wwmm.easyeffects --gapplication-service")
 end)
 
 
