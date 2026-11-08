@@ -225,6 +225,63 @@ symbol_map U+20000-U+2A6DF PingFang SC Bold
 
 <br>
 
+## Ghostty
+- Installation
+```bash
+sudo pacman -Syu ghostty
+
+# 1. Create the ghostty configuration folder
+mkdir -p ~/.config/ghostty
+
+# 2. Open and create the config file as your normal user
+nano ~/.config/ghostty/config
+```
+- Configs
+```bash
+# --- Font ---
+font-family = JetBrains Mono
+font-size = 15
+font-variation = wght=600
+
+# --- Appearance & Window ---
+foreground = #ffffff
+background = #000000
+selection-foreground = #000000
+selection-background = #ffffff
+
+# Liquid Glass Visuals
+# background-opacity = 0.75
+# background-blur-radius = 50
+
+window-padding-x = 10
+window-padding-y = 10
+window-decoration = false
+maximize = true
+
+# --- Cursor ---
+cursor-style = block
+cursor-style-blink = true
+
+# --- Mouse & Scroll ---
+scrollback-limit = 100000000
+mouse-hide-while-typing = true
+
+# --- Keybindings ---
+keybind = ctrl+d=new_split:right
+keybind = ctrl+shift+d=new_split:down
+keybind = ctrl+t=new_tab
+keybind = ctrl+w=close_surface
+
+# --- Enable xterm-256color ---
+term = xterm-256color
+```
+
+<br>
+
+---
+
+<br>
+
 ## Brightness
 - Install brightnessctl
 ```bash
@@ -281,15 +338,17 @@ nano ~/.config/hypr/hyprlock.conf
 ```bash
 background {
     monitor =
-    # You may change the path to apply your own wallpaper（such as /home/arch/Pictures/wallpaper.png）
-    # If you leave path line to blank it will automatically fills in a flat color
-    path = /home/arch/Pictures/wallpaper.jpg
-    color = rgba(30, 30, 46, 1.0) # Catppuccin Mocha 
+    path = /home/arch/Pictures/annie-spratt-d8FjB1_8xHQ-unsplash.jpg
+    color = rgba(0, 0, 0, 0.0)
 
-    # Blur effect
-    blur_passes = 2
-    blur_size = 7
-    noise = 0.0117
+    # Glass Blur Configuration
+    blur_passes = 3           # More passes create a smoother, heavier glass effect
+    blur_size = 8             # Higher size increases the blur radius
+    noise = 0.015             # Adds a subtle grain texture common in frosted glass
+    contrast = 1.0            # High contrast keeps colors vivid behind the glass
+    brightness = 0.8          # Lower brightness mimics tinted or frosted glass
+    vibrancy = 0.2            # Enhances colors pushing through the blur
+    vibrancy_darkness = 0.0
 }
 
 # Time
@@ -308,7 +367,7 @@ label {
 label {
     monitor =
     text = cmd[update:43200000] echo "$(date +"%A, %d %B")"
-    color = rgb(1bac, 207, 246) # 亮蓝色高亮
+    color = rgb(1bac, 207, 246)
     font_size = 24
     font_family = JetBrainsMono Nerd Font
     position = 0, 100
@@ -316,24 +375,24 @@ label {
     valign = center
 }
 
-# Password Input
+# Password-Input
 input-field {
     monitor =
     size = 250, 60
     outline_thickness = 3
-    dots_size = 0.2 # Password dot size
-    dots_spacing = 0.2 
+    dots_size = 0.2
+    dots_spacing = 0.2
     dots_center = true
-    
-    # Frame Color on hover ( while typing your password )
+
+    # Border color
     outer_color = rgb(137, 180, 250)
     inner_color = rgb(49, 50, 68)
     font_color = rgb(205, 214, 244)
-    
+
     fade_on_empty = false
-    placeholder_text = <i>Input Password...</i> # Prompt
+    placeholder_text = <i>Input Password...</i> # Prompt Text
     hide_input = false
-    
+
     position = 0, -100
     halign = center
     valign = center
@@ -809,18 +868,18 @@ hl.monitor({
     scale    = "1",
 })
 
-hl.monitor({ 
-    output = "HDMI-A-1", 
-    mode = "preferred", 
-    position = "auto-right", 
-    scale = "1" 
+hl.monitor({
+    output = "HDMI-A-1",
+    mode = "preferred",
+    position = "auto-right",
+    scale = "1"
 })
 
-hl.monitor({ 
-    output = "DP-1", 
-    mode = "2560x1440@144", 
-    position = "auto-right", 
-    scale = "1", 
+hl.monitor({
+    output = "DP-1",
+    mode = "2560x1440@144",
+    position = "auto-right",
+    scale = "1",
     transform = 2
 })
 
@@ -853,17 +912,15 @@ local menu = "hyprlauncher"
 -- Autostart necessary processes (like notifications daemons, status bars, etc.)
 -- Or execute your favorite apps at launch like this:
 --
-hl.on("hyprland.start", function () 
+hl.on("hyprland.start", function ()
    hl.exec_cmd("nm-applet")
    hl.exec_cmd("/usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1")
    hl.exec_cmd("hyprpaper")
    hl.exec_cmd("hyprpm reload")
-   hl.exec_cmd("walker")
    hl.exec_cmd("elephant")
    hl.exec_cmd("fcitx5 -d")
    hl.exec_cmd("flatpak run com.github.wwmm.easyeffects --gapplication-service")
 end)
-
 
 -------------------------------
 ---- ENVIRONMENT VARIABLES ----
@@ -913,7 +970,7 @@ hl.config({
         gaps_in  = 0,
         gaps_out = 0,
 
-        border_size = 2,
+        border_size = 0,
 
         col = {
             active_border   = { colors = {"rgba(33ccffee)", "rgba(00ff99ee)"}, angle = 45 },
@@ -955,7 +1012,7 @@ hl.config({
     animations = {
         enabled = True,
     },
-    
+
     misc = {
         -- Combines your Nerd Font for English/symbols with a Chinese fallback font
         font_family = "JetBrainsMono Nerd Font, Noto Sans CJK SC",
@@ -1052,7 +1109,7 @@ hl.config({
     misc = {
         force_default_wallpaper = -1,    -- Set to 0 or 1 to disable the anime mascot wallpapers
         disable_hyprland_logo   = false, -- If true disables the random hyprland logo / anime girl background. :(
-	font_family = "JetBrainsMono Nerd Font"
+        font_family = "JetBrainsMono Nerd Font"
     },
 })
 
@@ -1111,12 +1168,13 @@ hl.device({
 local mainMod = "SUPER" -- Sets "Windows" key as main modifier
 
 -- Example binds, see https://wiki.hypr.land/configuring/core/binds/ for more
-hl.bind(mainMod .. " + Q", hl.dsp.exec_cmd(terminal))
+hl.bind(mainMod .. " + Q", hl.dsp.exec_cmd("ghostty"))
 local closeWindowBind = hl.bind(mainMod .. " + C", hl.dsp.window.close())
 -- closeWindowBind:set_enabled(false)
 hl.bind(mainMod .. " + M", hl.dsp.exec_cmd("command -v hyprshutdown >/dev/null 2>&1 && hyprshutdown || hyprctl dispatch 'hl.dsp.exit()'"))
 hl.bind(mainMod .. " + E", hl.dsp.exec_cmd(fileManager))
 hl.bind(mainMod .. " + V", hl.dsp.window.float({ action = "toggle" }))
+-- hl.bind(mainMod .. " + R", hl.dsp.exec_cmd(menu))
 hl.bind(mainMod .. " + P", hl.dsp.window.pseudo())
 hl.bind(mainMod .. " + J", hl.dsp.layout("togglesplit"))    -- dwindle only
 
@@ -1170,23 +1228,14 @@ hl.bind("SUPER + SHIFT + S", hl.dsp.exec_cmd("sh -c 'grim -g \"$(slurp)\" - | wl
 -- Shift + Print: Full screen capture saved to ~/Pictures
 hl.bind("SUPER + SHIFT + S", hl.dsp.exec_cmd("sh -c 'grim ~/Pictures/$(date +%Y-%m-%d_%H-%M-%S).png'"))
 
--- Hyprcapture
--- hl.bind("SUPER + SHIFT + S", hl.plugin.hyprcapture.open)
-hl.bind("SUPER + CTRL + S", hl.plugin.hyprcapture.open_editor)
-
-hl.bind("SUPER + SHIFT + W", function()
-    hl.plugin.hyprcapture.open("window")
-end)
-
-hl.bind("SUPER + SHIFT + F", function()
-    hl.plugin.hyprcapture.open("fullscreen")
-end)
-
 -- Walker
 hl.bind(mainMod .. " + R", hl.dsp.exec_cmd("walker"))
 
 -- Suspend/Sleep the laptop
 hl.bind(mainMod .. " + Escape", hl.dsp.exec_cmd("systemctl suspend && hyprlock"))
+
+-- Toggle Fullscreen
+hl.bind(mainMod .. " + F", hl.dsp.window.fullscreen())
 
 
 
