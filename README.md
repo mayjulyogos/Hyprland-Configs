@@ -29,15 +29,69 @@ fc-cache -fv
 <br>
 
 ## Key-Bindings
-- Press `Win + R` to open `Terminal`
+- Press `Win + Q` to open your `default_terminal` ( Using `kitty` by defualt)
+- Press `Win + R` to open `App Launcher` ( Uisng `Walker` )
 - Press `Win + C` to terminate an `Application`
 - Press `Win + M` to exit `Hyprland`
 - Press `Win + L` to perform `Lock Screen` ( Using `Hyprlock` with customized `key-bindings` )
 - Press `Crtl + Space` to switch `Language Input` ( Using `Fctix 5` )
 - Press `Win + Shift + S` to toggle screenshot ( Using `Grim` )
-- Press `Win + Ctrl + S` to toggle `Hyprcapture` editor
-- Press `Win + Shift + W` to toggle `Hyprcapture` recorder to record your `Window`
-- Press `Win + Shift + F` to toggle `Hyprcapture` recorder to record your `Full Screen`
+
+<br>
+
+---
+
+<br>
+
+## Walker (App Launcher)
+- Install dependencies
+```bash
+yay -S walker-bin elephant-bin
+yay -S elephant-providerlist-bin elephant-desktopapplicaations-bin
+```
+- Add `elephant` to your `Autostart` section in `Hyprland.lua`
+```bash
+-------------------
+---- AUTOSTART ----
+-------------------
+
+-- See https://wiki.hypr.land/configuring/core/autostart/
+
+-- Autostart necessary processes (like notifications daemons, status bars, etc.)
+-- Or execute your favorite apps at launch like this:
+--
+hl.on("hyprland.start", function () 
+   hl.exec_cmd("nm-applet")
+   hl.exec_cmd("/usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1")
+   hl.exec_cmd("walker")
+   hl.exec_cmd("elephant")
+end)
+```
+- Configs your `Kye-Bindings` change your default launcher from `Hyprlauncher` to `Walker`
+- Comment out your default `Hyprlauncher` key-bindings and config the key-binding to  launch `Walker`
+```bash
+---------------------
+---- KEYBINDINGS ----
+---------------------
+
+local mainMod = "SUPER" -- Sets "Windows" key as main modifier
+
+-- Example binds, see https://wiki.hypr.land/configuring/core/binds/ for more
+hl.bind(mainMod .. " + Q", hl.dsp.exec_cmd(terminal))
+local closeWindowBind = hl.bind(mainMod .. " + C", hl.dsp.window.close())
+-- closeWindowBind:set_enabled(false)
+hl.bind(mainMod .. " + M", hl.dsp.exec_cmd("command -v hyprshutdown >/dev/null 2>&1 && hyprshutdown || hyprctl dispatch 'hl.dsp.exit()'"))
+hl.bind(mainMod .. " + E", hl.dsp.exec_cmd(fileManager))
+hl.bind(mainMod .. " + V", hl.dsp.window.float({ action = "toggle" }))
+-- hl.bind(mainMod .. " + R", hl.dsp.exec_cmd(menu))
+hl.bind(mainMod .. " + P", hl.dsp.window.pseudo())
+hl.bind(mainMod .. " + J", hl.dsp.layout("togglesplit"))    -- dwindle only
+
+...
+
+-- Walker
+hl.bind(mainMod .. " + R", hl.dsp.exec_cmd("walker"))
+```
 
 <br>
 
@@ -52,7 +106,7 @@ sudo pacman -S hyprpaper
 ```
 ### Configure hyprpaper config file
 ```bash
-sudo nano /home/arch/.config/hypr/hyprpaper.conf
+nano /home/arch/.config/hypr/hyprpaper.conf
 ```
 - Paste these following lines into the `hyprpaper.conf` file
 - You may replace `/home/arch/Pictures/wallpaper.jpg` with your own wallpaper path
@@ -83,7 +137,7 @@ wallpaper {
 
 ### Configure the Autostart part in hyprland.lua
 ```bash
-sudo nano /home/arch/.config/hypr/hyprland.lua
+nano /home/arch/.config/hypr/hyprland.lua
 ```
 - Replace the lines in your `Hyprland.lua` under `---- AUTOSTART ----` Section with these following lines
 - By adding in `hl.exec_cmd("hyprpaper")`, `Hyprpaper` will be launched automatically each time you start up `Hyprland`
@@ -100,6 +154,8 @@ sudo nano /home/arch/.config/hypr/hyprland.lua
 hl.on("hyprland.start", function ()
    hl.exec_cmd("nm-applet")
    hl.exec_cmd("/usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1")
+   hl.exec_cmd("walker")
+   hl.exec_cmd("elephant")
    hl.exec_cmd("hyprpaper")
 end)
 ```
@@ -107,83 +163,10 @@ end)
 
 <br>
 
-### Fix the File Ownership
-- Run this command to make sure your regular user account owns your configuration file
+- Reload `Hyprland` to apply changes
 ```bash
-sudo chown arch:arch ~/.config/hypr/hyprland.lua
+hyprctl reload
 ```
-- Reboot to apply changes
-```
-systemctl reboot
-```
-
-<br>
-
----
-
-<br>
-
-## Hyprpm (Hyprland Plugins)
-- Install `Hyprpm`
-```bash
-sudo pacman -S hyprpm
-```
-- Add `hyprpm reload` to `hyprland.lua`
-```bash
--------------------
----- AUTOSTART ----
--------------------
-
--- See https://wiki.hypr.land/configuring/core/autostart/
-
--- Autostart necessary processes (like notifications daemons, status bars, etc.)
--- Or execute your favorite apps at launch like this:
---
-hl.on("hyprland.start", function () 
-   hl.exec_cmd("nm-applet")
-   hl.exec_cmd("/usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1")
-   hl.exec_cmd("hyprpaper")
-   hl.exec_cmd("hyprpm reload")
-end)
-```
-### Important Command lines format
-- Initial Setup & Initialization
-```bash
-# Update/Sync Headers:
-hyprpm update
-```
-- Searching & Listing Plugins
-```bash
-# List all installed plugins and their statuses:
-hyprpm list
-```
-- Installing & Enabling Plugins
-	Installing a plugin requires adding its repository first, then enabling the desired plugin inside it.
-```bash
-# Add a plugin repository:
-# Enable a specific plugin:
-# Reload hyprpm into your running session:
-# Verification: The plugin's features or keybinds should immediately take effect in your Hyprland session.
-```
-- Disabling & Uninstalling Plugins
-```bash
-# Disable an active plugin
-hyprpm disable <plugin-name>
-
-# Remove the plugin repository
-hyprpm remove <plugin-name-or-repo-url>
-
-# Reload to unload binary components from memory
-hyprpm reload
-```
-- Maintenance & Troubleshooting
-	Use these utility commands to handle updates or fix broken plugin builds.
-
-| **Command**          | **Purpose**                                                                                                                                                                   |
-| -------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `hyprpm update`      | Pulls latest plugin code and rebuilds headers against Hyprland.                                                                                                               |
-| `hyprpm reload`      | Unloads and reloads all enabled plugins live.                                                                                                                                 |
-| `hyprpm purge-cache` | Cleans cached build artifacts, compiled shared objects (`.so`), and old headers. Which will fully reset your `Hyprpm` by disabling every single `plugins` you have installed. |
 
 <br>
 
@@ -192,6 +175,14 @@ hyprpm reload
 <br>
 
 ## Kitty Configs
+- Create `Kitty` config
+```bash
+mkdir /home/arch/.config/kitty
+```
+- Create `Kitty.conf`
+```bash
+nano kitty.conf
+```
 - `Font size`, `Font Family`, `Scroll back Limits`, `Background Opacity` and `Background Color`
 ```bash
 font_size 14
@@ -239,7 +230,7 @@ nano ~/.config/ghostty/config
 - Configs
 ```bash
 # --- Font ---
-font-family = JetBrains Mono
+font-family = "JetBrains Mono"
 font-size = 15
 font-variation = wght=600
 
@@ -430,64 +421,6 @@ hl.bind(mainMod .. " + Escape", hl.dsp.exec_cmd("systemctl suspend && hyprlock")
 
 <br>
 
-## Walker (App Launcher)
-- Install dependencies
-```bash
-yay -S walker-bin elephant-bin
-yay -S elephant-providerlist-bin elephant-desktopapplicaations-bin
-```
-- Add `elephant` to your `Autostart` section in `Hyprland.lua`
-```bash
--------------------
----- AUTOSTART ----
--------------------
-
--- See https://wiki.hypr.land/configuring/core/autostart/
-
--- Autostart necessary processes (like notifications daemons, status bars, etc.)
--- Or execute your favorite apps at launch like this:
---
-hl.on("hyprland.start", function () 
-   hl.exec_cmd("nm-applet")
-   hl.exec_cmd("hyprpaper")
-   hl.exec_cmd("/usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1")
-   hl.exec_cmd("hyprpm reload")
-   hl.exec_cmd("walker")
-   hl.exec_cmd("elephant")
-end)
-```
-- Configs your `Kye-Bindings` change your default launcher from `Hyprlauncher` to `Walker`
-- Comment out your default `Hyprlauncher` key-bindings and config the key-binding to  launch `Walker`
-```bash
----------------------
----- KEYBINDINGS ----
----------------------
-
-local mainMod = "SUPER" -- Sets "Windows" key as main modifier
-
--- Example binds, see https://wiki.hypr.land/configuring/core/binds/ for more
-hl.bind(mainMod .. " + Q", hl.dsp.exec_cmd(terminal))
-local closeWindowBind = hl.bind(mainMod .. " + C", hl.dsp.window.close())
--- closeWindowBind:set_enabled(false)
-hl.bind(mainMod .. " + M", hl.dsp.exec_cmd("command -v hyprshutdown >/dev/null 2>&1 && hyprshutdown || hyprctl dispatch 'hl.dsp.exit()'"))
-hl.bind(mainMod .. " + E", hl.dsp.exec_cmd(fileManager))
-hl.bind(mainMod .. " + V", hl.dsp.window.float({ action = "toggle" }))
--- hl.bind(mainMod .. " + R", hl.dsp.exec_cmd(menu))
-hl.bind(mainMod .. " + P", hl.dsp.window.pseudo())
-hl.bind(mainMod .. " + J", hl.dsp.layout("togglesplit"))    -- dwindle only
-
-...
-
--- Walker
-hl.bind(mainMod .. " + R", hl.dsp.exec_cmd("walker"))
-```
-
-<br>
-
----
-
-<br>
-
 ## Fctix 5
 - For Chinese Input
 ```bash
@@ -526,9 +459,9 @@ hl.env("HYPRCURSOR_SIZE", "24")
 hl.on("hyprland.start", function () 
    hl.exec_cmd("nm-applet")
    hl.exec_cmd("/usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1")
-   hl.exec_cmd("hyprpaper")
-   hl.exec_cmd("hyprpm reload")
+   hl.exec_cmd("walker")
    hl.exec_cmd("elephant")
+   hl.exec_cmd("hyprpaper")
    hl.exec_cmd("fcitx5 -d")
 end)
 ```
@@ -608,40 +541,6 @@ hl.bind("SUPER + SHIFT + S", hl.dsp.exec_cmd("sh -c 'grim ~/Pictures/$(date +%Y-
 
 <br>
 
-### Hyprcapture
-- Install Dependencies
-```bash
-sudo pacman -Syu --needed base-devel cmake git cpio \
-    hyprland nlohmann-json lua glib2 \
-    qt6-base qt6-svg qt6-wayland layer-shell-qt opencv vtk hdf5 \
-    pipewire libpipewire fftw libpulse ffmpeg wl-clipboard \
-    pipewire-pulse wireplumber
-```
-- Build and enable the plugin
-```bash
-hyprpm update
-hyprpm add https://github.com/gfhdhytghd/HyprCapture
-hyprpm enable hyprcapture
-hyprpm reload
-```
-- Paste these following lines into `Hyprland.lua` file under `---- KEYBINDINGS ----` section
-- `Lua Actions` and `Key-Bindings`
-```bash
--- Screenshot
-hl.bind("SUPER + SHIFT + s", hl.plugin.hyprcapture.open)
-hl.bind("SUPER + CTRL + s", hl.plugin.hyprcapture.open_editor)
-
-hl.bind("SUPER + SHIFT + w", function()
-    hl.plugin.hyprcapture.open("window")
-end)
-
-hl.bind("SUPER + SHIFT + f", function()
-    hl.plugin.hyprcapture.open("fullscreen")
-end)
-```
-
-<br>
-
 ---
 
 <br>
@@ -709,9 +608,9 @@ yay -S quickshell
 hl.on("hyprland.start", function () 
    hl.exec_cmd("nm-applet")
    hl.exec_cmd("/usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1")
-   hl.exec_cmd("hyprpaper")
-   hl.exec_cmd("hyprpm reload")
+   hl.exec_cmd("walker")
    hl.exec_cmd("elephant")
+   hl.exec_cmd("hyprpaper")
    hl.exec_cmd("fcitx5 -d")
    hl.exec_cmd("quickshell")
 end)
@@ -915,9 +814,9 @@ local menu = "hyprlauncher"
 hl.on("hyprland.start", function ()
    hl.exec_cmd("nm-applet")
    hl.exec_cmd("/usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1")
-   hl.exec_cmd("hyprpaper")
-   hl.exec_cmd("hyprpm reload")
+   hl.exec_cmd("walker")
    hl.exec_cmd("elephant")
+   hl.exec_cmd("hyprpaper")
    hl.exec_cmd("fcitx5 -d")
    hl.exec_cmd("flatpak run com.github.wwmm.easyeffects --gapplication-service")
 end)
