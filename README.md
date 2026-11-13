@@ -99,6 +99,19 @@ hl.bind(mainMod .. " + R", hl.dsp.exec_cmd("walker"))
 
 <br>
 
+## Turn on Dark Mode
+```bash
+# Turns on Dark Mode system wide
+# If gsettings is not found: Install glib2 (sudo pacman -S glib2)
+gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark'
+```
+
+<br>
+
+---
+
+<br>
+
 ## Wallpaper
 - Hyprpaper
 ```bash
