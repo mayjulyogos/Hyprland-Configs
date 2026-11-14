@@ -1,0 +1,36 @@
+# --- Font ---
+font-family = "JetBrains Mono"
+font-size = 15
+font-variation = wght=600
+
+# --- Appearance & Window ---
+foreground = #ffffff
+background = #000000
+selection-foreground = #000000
+selection-background = #ffffff
+
+# Liquid Glass Visuals
+background-opacity = 0.75
+background-blur-radius = 50
+
+window-padding-x = 10
+window-padding-y = 10
+window-decoration = false
+maximize = true
+
+# --- Cursor ---
+cursor-style = block
+cursor-style-blink = true
+
+# --- Mouse & Scroll ---
+scrollback-limit = 100000000
+mouse-hide-while-typing = true
+
+# --- Keybindings ---
+keybind = ctrl+d=new_split:right
+keybind = ctrl+shift+d=new_split:down
+keybind = ctrl+t=new_tab
+keybind = ctrl+w=close_surface
+
+# --- Enable xterm-256color ---
+term = xterm-256color
