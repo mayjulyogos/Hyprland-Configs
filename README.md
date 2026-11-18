@@ -628,8 +628,9 @@ hl.on("hyprland.start", function ()
    hl.exec_cmd("quickshell")
 end)
 ```
-- Create the `quickshell` folder and `shell.qml`
-- This is an example `quickshell` configs which just include a simple `clock` function
+- Create the `quickshell` folder, `shell.qml` and more `.qml` files to config your own quickshell
+- You may build the `qml` files by your own to create your own `quickshell` as well
+- There are `shell.qml`, `Pill.qml`, `Workspace.qml` and `Poller.qml` provided
 ```bash
 cd /home/arch/.config
 
@@ -637,100 +638,6 @@ mkdir quickshell
 cd quickshell
 
 nano shell.qml
-```
-- `Quickshell` Configs
-```bash
-import Quickshell
-import Quickshell.Io
-import QtQuick
-
-PanelWindow {
-  id: root
-
-  anchors.top: true
-  anchors.left: true
-  anchors.right: true
-
-  implicitHeight: 45
-  color: "transparent"
-
-  // Dynamically change the exclusive zone: 
-  // Reserves 45px when shown, but drops to 0px when hidden to remove the gap.
-  exclusiveZone: root.shouldShow ? 45 : 0
-
-  // Invisible trigger zone spanning the top edge of the screen
-  MouseArea {
-    id: edgeTrigger
-    anchors.fill: parent
-    hoverEnabled: true
-    acceptedButtons: Qt.NoButton
-  }
-
-  // Show if either the top edge or the pill itself is hovered
-  readonly property bool shouldShow: edgeTrigger.containsMouse || pill.hovered
-
-  Rectangle {
-    id: pill
-    property bool hovered: mouse.containsMouse
-
-    anchors.horizontalCenter: parent.horizontalCenter
-    
-    // Slide up out of bounds when hidden (-40), slide down when shown (5)
-    y: root.shouldShow ? 5 : -40
-
-    width: hovered ? 180 : 150
-    height: 30
-    radius: height / 2
-    color: hovered ? "#6f9bf3" : "#1b1b1b"
-
-    Behavior on y {
-      NumberAnimation { duration: 250; easing.type: Easing.OutBack }
-    }
-
-    Behavior on width {
-      NumberAnimation { duration: 250; easing.type: Easing.OutBack }
-    }
-
-    Behavior on color {
-      ColorAnimation { duration: 250; easing.type: Easing.OutBack }
-    }
-
-    Text {
-      id: clock
-      anchors.centerIn: parent
-      color: mouse.containsMouse ? "#000000" : "#ffffff"
-      font.weight: 700
-      font.pixelSize: 14
-
-      Behavior on color {
-        ColorAnimation { duration: 250; easing.type: Easing.OutBack }
-      }
-    }
-
-    MouseArea {
-      id: mouse
-      anchors.fill: parent
-      hoverEnabled: true
-    }
-
-    Process {
-      id: dateProc
-      command: ["date", "+%I:%M %p"]
-      running: true
-
-      stdout: StdioCollector {
-        onStreamFinished: clock.text = this.text.trim()
-      }
-    }
-
-    Timer {
-      interval: 1000
-      running: true
-      repeat: true
-      onTriggered: dateProc.running = true
-    }
-  }
-}
 ```
 
 <br>
