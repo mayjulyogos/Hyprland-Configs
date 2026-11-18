@@ -19,7 +19,7 @@ PanelWindow {
 
     Behavior on margins.top {
         NumberAnimation {
-            duration: 200
+            duration: 100
             easing.type: Easing.OutCubic
         }
     }
