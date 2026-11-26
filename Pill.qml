@@ -9,10 +9,13 @@ Rectangle {
     property color iconColor: "#3cd"
     property int maxLabelWidth: 400
 
-    implicitWidth: row.implicitWidth + 30
+    implicitWidth: row.implicitWidth + 40
     implicitHeight: 35
     radius: height / 2
-    color: "#040e0d"
+    // color: "transparent"
+    color: '#00105B'
+    // color: Qt.alpha("#000000", 0.75)
+    // color: Qt.alpha("#ffffff", 0.25)
 
     RowLayout {
         id: row
@@ -28,7 +31,7 @@ Rectangle {
 
         Text {
             text: root.label
-            color: "#f5e5c5"
+            color: "#ffffff"
             font.family: "JetBrainsMono Nerd Font"
             font.pixelSize: 14
             elide: Text.ElideRight
