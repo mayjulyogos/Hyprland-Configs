@@ -37,6 +37,9 @@ hl.monitor({
     mode = "1920x1080@60",
     position = "auto-right",
     scale = "1"
+    // For mirroring Displays
+    // mirror = "display_name"
+    mirror = "eDP-1"
 })
 
 hl.monitor({
@@ -45,6 +48,13 @@ hl.monitor({
     position = "auto-right",
     scale = "1",
     transform = 2
+})
+
+-- Disable Auto HDR
+hl.config({
+    render = {
+        cm_auto_hdr = 0,
+    },
 })
 
 -- 2. Lid Switch Handling (Dynamic Laptop Screen Control)
@@ -130,8 +140,8 @@ hl.env("HYPRCURSOR_SIZE", "24")
 -- Refer to https://wiki.hypr.land/configuring/core/config-options/
 hl.config({
     general = {
-        gaps_in  = 0,
-        gaps_out = 0,
+        gaps_in  = 5,
+        gaps_out = 10,
 
         border_size = 0,
 
