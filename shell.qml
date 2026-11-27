@@ -202,21 +202,21 @@ Scope {
                 Pill {
                     icon: ""
                     label: vol.value + "%"
-                    iconColor: "#ff6048"
+                    iconColor: "#FFEDF3"
                 }
 	
 		// Brightness
                 Pill {
                     icon: ""
                     label: brightness.value + "%"
-                    iconColor: "#ff6059"
+                    iconColor: "#ADEED9"
                 }
 
 		// Network
                 Pill {
                     icon: ""
                     label: net.value
-                    iconColor: "#5fc8d4"
+                    iconColor: "#56DFCF"
                 }
 
 		// RAM
