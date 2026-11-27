@@ -55,9 +55,9 @@ Scope {
             right: true 
         }
         margins {
-            top: 5
-            left: 5
-            right: 5
+            top: 10
+            left: 10
+            right: 10
         }
         implicitHeight: 50
         color: "transparent"
