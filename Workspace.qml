@@ -4,10 +4,10 @@ import QtQuick
 import QtQuick.Layouts
 
 Rectangle {
-    implicitWidth: row.implicitWidth + 30
-    implicitHeight: 35
+    implicitWidth: row.implicitWidth + 35
+    implicitHeight: 30
     radius: height / 2
-    color: '#00105B'
+    color: '#6061B6'
     // color: "transparent"
 
     RowLayout {
@@ -28,7 +28,7 @@ Rectangle {
                 implicitHeight: implicitWidth
                 radius: width/2
                 // Color states: Active (transparent with border), Occupied, or Empty
-                color: isActive ? "transparent" : (isOccupied ? '#6f6f6f' : '#4d4d4d')
+                color: isActive ? "transparent" : (isOccupied ? '#C9B5E0' : '#00105B')
                 border.width: isActive ? 2 : 0
                 border.color: '#ffffff'
 
