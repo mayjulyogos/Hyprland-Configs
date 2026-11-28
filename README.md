@@ -112,6 +112,68 @@ gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark'
 
 <br>
 
+## Font Rendering Settings
+```bash
+mkdir -p ~/.config/fontconfig
+nano ~/.config/fontconfig/fonts.conf
+
+# Paste these following lines into the fonts.conf file
+<?xml version="1.0"?>
+<!DOCTYPE fontconfig SYSTEM "urn:fontconfig:fonts.dtd">
+<fontconfig>
+  <match target="font">
+    <!-- Enable Antialiasing -->
+    <edit name="antialias" mode="assign">
+      <bool>true</bool>
+    </edit>
+
+    <!-- Amount of Hinting: hintnone, hintslight, hintmedium, hintfull -->
+    <edit name="hinting" mode="assign">
+      <bool>true</bool>
+    </edit>
+    <edit name="hintstyle" mode="assign">
+      <const>hintfull</const>
+    </edit>
+
+    <!-- Subpixel Rendering Mode: rgb, bgr, vrgb, vbgr, or none (grayscale) -->
+    <edit name="rgba" mode="assign">
+      <const>rgb</const>
+    </edit>
+
+    <!-- LCD Filter (reduces color fringing on subpixel rendering): lcddefault, lcdlight, lcdnone -->
+    <edit name="lcdfilter" mode="assign">
+      <const>lcddefault</const>
+    </edit>
+  </match>
+</fontconfig>
+
+# Press Ctrl + O and Ctrl + X to save and exit the fonts.conf file
+
+
+
+# Update the font cache
+fc-cache -fv
+
+
+
+# Verify
+fc-match -v sans-serif | grep -E "antialias|hintstyle|rgba|lcdfilter"
+
+# The output should be something like these following lines
+[arch@arch ~]$ fc-match -v sans-serif | grep -E "antialias|hintstyle|rgba|lcdfilter"
+	antialias: True(w)
+	hintstyle: 3(i)(w)
+	rgba: 1(i)(w)
+	lcdfilter: 1(i)(w)
+[arch@arch ~]$ 
+```
+
+<br>
+
+---
+
+<br>
+
 ## Wallpaper
 - Hyprpaper
 ```bash
